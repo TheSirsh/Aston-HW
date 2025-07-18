@@ -1,0 +1,189 @@
+openapi: 3.0.0
+info:
+  title: Онлайн магазин
+  description: API для управления товарами в онлайн магазине
+  version: 1.0.1
+servers:
+  - url: "http://localhost:3000/"
+    description: Локальный сервер 3000
+  - url: "http://localhost:5000/"
+    description: Локальный сервер 5000
+  - url: "http://localhost:8080/"
+    description: Локальный сервер 8080
+paths:
+  /products:
+    get:
+      summary: Получение товаров
+      tags:
+        - Products
+      operationId: getAllProducts
+      responses:
+        "200":
+          description: Товары получены успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "default":
+          description: Что-то пошло не так
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      summary: Создание товара
+      tags:
+        - Products
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"   
+      responses:
+        "200":
+          description: Товар создан успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400": 
+          description: Некорректные данные
+        "default":
+          description: Что-то пошло не так
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"                  
+              
+  /products/{product_id}:
+    get:
+      summary: Получение товара по его идентификатору
+      tags:
+        - Products
+      operationId: getProductById
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: Идентификатор товара
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Товар получен успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400": 
+          description: Некорректный идентификатор
+        "404":
+          description: Товар не найден
+        "default":
+          description: Что-то пошло не так
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+                
+    patch:
+      summary: Обновление товара по его идентификатору
+      tags:
+        - Products
+      operationId: patchProductById
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: Идентификатор товара
+          schema:
+            type: string
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: Товар обновлён успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400": 
+          description: Некорректные данные
+        "404":
+          description: Товар не найден
+        "default":
+          description: Что-то пошло не так
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"                
+  
+    delete: 
+      summary: Товар удалён успешно
+      tags:
+        - Products
+      operationId: deleteProductById
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: Идентификатор товара
+          schema:
+            type: string
+            example: 1
+      responses:
+        "200":
+          description: Успешное удаление товара
+          content:
+            application/json: {}
+        "400": 
+          description: Некорректный идентификатор
+        "404":
+          description: Товар не найден
+        "default":
+          description: Что-то пошло не так
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"        
+
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - name
+        - cost
+      properties:
+        product_id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: Автомобиль
+        cost::
+          type: string
+          example: 50$
+    Products:
+      type: array
+      items:
+        $ref: "#/components/schemas/Product"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
