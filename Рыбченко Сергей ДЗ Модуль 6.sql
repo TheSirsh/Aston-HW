@@ -1,40 +1,56 @@
-CREATE TABLE Products( /* Создание таблицы Products */
-	product_id INT NOT NULL PRIMARY KEY, /* Функция автоинкремента по-разному поддерживается в разных СУБД, поэтому без неё */
+/* Систаксис SQLLite */
+
+/* Создание таблицы Products. */
+CREATE TABLE Products(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	product_name VARCHAR(15),
 	category VARCHAR(15),
 	price DECIMAL(7, 2)
 );
 
-INSERT INTO Products(product_id, product_name, category, price)
-VALUES (1, 'Laptop', 'Electronics', 1000.00),
-	(2, 'Smartphone', 'Electronics', 500.00),
-	(3, 'Table', 'Furniture', 150.00),
-	(4, 'Chair', 'Furniture', 75.00);
+/* Добавление данных в таблицу Products. */
+INSERT INTO Products(product_name, category, price)
+VALUES ('Laptop', 'Electronics', 1000.00),
+	('Smartphone', 'Electronics', 500.00),
+	('Table', 'Furniture', 150.00),
+	('Chair', 'Furniture', 75.00);
 
-CREATE TABLE Orders( /* Создание таблицы Orders */
-	order_id INT NOT NULL PRIMARY KEY, /* Функция автоинкремента по-разному поддерживается в разных СУБД, поэтому без неё */
+/* Создание таблицы Orders. */
+CREATE TABLE Orders(
+	id INT NOT NULL PRIMARY KEY,
 	product_id INT,
 	quantity int,
-	order_date DATE
+	order_date DATE,
+	FOREIGN KEY (product_id) REFERENCES Products (id)
 );
 
-INSERT INTO Orders(order_id, product_id, quantity, order_date)
-VALUES (1, 1, 2, '2023-01-15'),
-	(2, 2, 1, '2023-02-20'),
-	(3, 3, 4, '2023-03-05'),
-	(4, 4, 3, '2023-04-10'),
-	(5, 1, 1, '2023-05-22');
+/* Добавление данных в таблицу Orders. */
+INSERT INTO Orders(product_id, quantity, order_date)
+VALUES (1, 2, '2023-01-15'),
+	(2, 1, '2023-02-20'),
+	(3, 4, '2023-03-05'),
+	(4, 3, '2023-04-10'),
+	(1, 1, '2023-05-22');
 
-SELECT Products.product_name AS 'Наименование_продукта', 
-	COUNT(Orders.product_id) AS 'Количество_заказов',
-	SUM(price * Orders.quantity) AS 'Общая_сумма_продаж'
+/* Вывод списка всех товаров вместе с количеством заказов каждого товара. */
+SELECT product_name AS "Название товара",
+	SUM(Orders.quantity) AS "Количество заказов"
 FROM Products
-	JOIN Orders ON Products.product_id = Orders.product_id
+	JOIN Orders ON Orders.product_id = Products.id
 GROUP BY Products.product_name;
 
-SELECT Orders.order_date AS Дата_заказа,
-  Products.product_name AS Название_продукта,
-  Orders.quantity AS Количество_проданного_товара
+/* Вывод общей суммы продаж (в долларах) для каждого товара. */
+SELECT product_name AS "Название продукта",
+	SUM(orders.quantity * Products.price) || '$' AS "Общая стоимость"
 FROM Products
-	JOIN Orders ON Orders.product_id = Products.product_id
-WHERE Orders.order_date LIKE '2023_03%'; /* Можно использовать регулярное выражения вида '^2023.03', но, как и в случае с инкрементом в разных СУБД разный синтаксис */
+	JOIN orders ON orders.product_id = products.id
+GROUP BY Products.product_name_id = Orders.product_id
+GROUP BY Products.product_name;
+
+/* Вывод списка всех заказов, сделанных в марте 2023 года, включая название товара и количество. */
+SELECT Orders.order_date AS "Дата заказа",
+	Products.product_name AS "Название продукта",
+	Orders.quantity AS "Количество проданного товара"
+FROM Products
+	JOIN Orders ON Orders.product_id = Products.id
+WHERE Orders.order_date BETWEEN '2023-03-01' AND '2023-03-31';
