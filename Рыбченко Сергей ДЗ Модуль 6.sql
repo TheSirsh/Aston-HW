@@ -1,4 +1,4 @@
-/* Систаксис SQLLite */
+/* Синтаксис SQLLite */
 
 /* Создание таблицы Products. */
 CREATE TABLE Products(
@@ -17,9 +17,9 @@ VALUES ('Laptop', 'Electronics', 1000.00),
 
 /* Создание таблицы Orders. */
 CREATE TABLE Orders(
-	id INT NOT NULL PRIMARY KEY,
-	product_id INT,
-	quantity int,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	product_id INTEGER,
+	quantity INTEGER,
 	order_date DATE,
 	FOREIGN KEY (product_id) REFERENCES Products (id)
 );
