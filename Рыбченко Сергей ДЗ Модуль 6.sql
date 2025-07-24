@@ -44,7 +44,6 @@ SELECT product_name AS "Название продукта",
 	SUM(orders.quantity * Products.price) || '$' AS "Общая стоимость"
 FROM Products
 	JOIN orders ON orders.product_id = products.id
-GROUP BY Products.product_name_id = Orders.product_id
 GROUP BY Products.product_name;
 
 /* Вывод списка всех заказов, сделанных в марте 2023 года, включая название товара и количество. */
