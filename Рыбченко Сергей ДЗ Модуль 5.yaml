@@ -128,7 +128,7 @@ paths:
                 $ref: "#/components/schemas/Error"                
   
     delete: 
-      summary: Товар удалён успешно
+      summary: Удаление товара по его идентификатору
       tags:
         - Products
       operationId: deleteProductById
