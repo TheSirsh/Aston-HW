@@ -82,7 +82,8 @@ paths:
           required: true
           description: Идентификатор товара
           schema:
-            type: number
+            type: integer
+            format: int64
             example: 1
       responses:
         "200":
@@ -129,17 +130,18 @@ paths:
                 $ref: "#/components/schemas/Error"  
                 
     put:
-      summary: Полное товара по его идентификатору
+      summary: Полное обновление товара по его идентификатору
       tags:
         - Products
-      operationId: patchProductById
+      operationId: updateProductById
       parameters:
         - name: product_id
           in: path
           required: true
           description: Идентификатор товара
           schema:
-            type: number
+            type: integer
+            format: int64
             example: 1
       requestBody:
         required: true
@@ -202,13 +204,12 @@ paths:
           required: true
           description: Идентификатор товара
           schema:
-            type: number
+            type: integer
+            format: int64
             example: 1
       responses:
         "204":
           description: Успешное удаление товара
-          content:
-            application/json: {}
         "400": 
           description: Некорректный идентификатор
           content:
@@ -255,7 +256,8 @@ components:
         - cost
       properties:
         product_id:
-          type: number
+          type: integer
+          format: int64
           example: 1
         name:
           type: string
@@ -294,8 +296,10 @@ components:
       properties:
         code:
           type: integer
+          example: 418
         message:
           type: string
+          example: Я чайник
         timestamp:
           type: string
           format: date-time
