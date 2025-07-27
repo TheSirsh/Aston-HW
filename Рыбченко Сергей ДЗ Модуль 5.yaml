@@ -24,6 +24,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Products"
+        "401":
+          description: Пользователь не авторизован
+        "403":
+          description: Действие запрещено
+        "500":
+          description: Ошибка сервера
         "default":
           description: Что-то пошло не так
           content:
@@ -41,9 +47,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"   
+              $ref: "#/components/schemas/ProductInput"   
       responses:
-        "200":
+        "201":
           description: Товар создан успешно
           content:
             application/json:
@@ -51,6 +57,12 @@ paths:
                 $ref: "#/components/schemas/Product"
         "400": 
           description: Некорректные данные
+        "401":
+          description: Пользователь не авторизован
+        "403":
+          description: Действие запрещено
+        "500":
+          description: Ошибка сервера
         "default":
           description: Что-то пошло не так
           content:
@@ -70,7 +82,7 @@ paths:
           required: true
           description: Идентификатор товара
           schema:
-            type: integer
+            type: number
             example: 1
       responses:
         "200":
@@ -81,8 +93,34 @@ paths:
                 $ref: "#/components/schemas/Product"
         "400": 
           description: Некорректный идентификатор
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "403":
+          description: Действие запрещено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
         "404":
           description: Товар не найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "500":
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
         "default":
           description: Что-то пошло не так
           content:
@@ -90,8 +128,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"  
                 
-    patch:
-      summary: Обновление товара по его идентификатору
+    put:
+      summary: Полное товара по его идентификатору
       tags:
         - Products
       operationId: patchProductById
@@ -101,7 +139,7 @@ paths:
           required: true
           description: Идентификатор товара
           schema:
-            type: string
+            type: number
             example: 1
       requestBody:
         required: true
@@ -118,8 +156,34 @@ paths:
                 $ref: "#/components/schemas/Product"
         "400": 
           description: Некорректные данные
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "403":
+          description: Действие запрещено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
         "404":
           description: Товар не найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "500":
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
         "default":
           description: Что-то пошло не так
           content:
@@ -138,17 +202,43 @@ paths:
           required: true
           description: Идентификатор товара
           schema:
-            type: string
+            type: number
             example: 1
       responses:
-        "200":
+        "204":
           description: Успешное удаление товара
           content:
             application/json: {}
         "400": 
           description: Некорректный идентификатор
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "403":
+          description: Действие запрещено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
         "404":
           description: Товар не найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+        "500":
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
         "default":
           description: Что-то пошло не так
           content:
@@ -170,9 +260,27 @@ components:
         name:
           type: string
           example: Автомобиль
-        cost::
+          minLength: 1
+          maxLength : 15
+        cost:
+          type: number
+          example: 50
+          minimum: 1
+    ProductInput:
+      type: object
+      required:
+        - name
+        - cost
+      properties:
+        name:
           type: string
-          example: 50$
+          example: Автомобиль
+          minLength: 1
+          maxLength : 15          
+        cost:
+          type: number
+          example: 50
+          minimum: 1
     Products:
       type: array
       items:
@@ -182,8 +290,14 @@ components:
       required:
         - code
         - message
+        - timestamp        
       properties:
         code:
           type: integer
         message:
           type: string
+        timestamp:
+          type: string
+          format: date-time
+          description: Время ошибки
+          example: "2025-01-01T00:00:00Z"
